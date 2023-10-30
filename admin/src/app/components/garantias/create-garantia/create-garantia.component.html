@@ -1,0 +1,196 @@
+<app-sidebar></app-sidebar>
+
+<!-- Page title-->
+<div class="border-bottom pt-5 mt-2 mb-5">
+  <h1 class="mt-2 mt-md-4 mb-3 pt-5">Garantias</h1>
+  <div class="d-flex flex-wrap flex-md-nowrap justify-content-between">
+    <p class="text-muted">En este modulo se Crean los garantias</p>
+
+  </div>
+</div>
+<form #registroForm="ngForm" (ngSubmit)="registro(registroForm)">
+  <div class="card box-shadow-sm">
+    <div class="card-header">
+      <h5 style="margin-bottom: 0px;">Registro de garantia</h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="row">
+            <div class="col-lg-9 form-group">
+              <label for="">Cliente</label>
+              <input type="text" class="form-control" placeholder="Ningun Cliente Seleccionado" required name="cliente"
+                [(ngModel)]="cliente.nombre" value="id_cliente" disabled>
+              <div class="row">
+                <div class="col-6">
+                  <label for="">Buscar Cliente</label>
+                  <form class="form-inline pt-2">
+                    <label class="sr-only" for="inline-form-input-name">Nombre</label>
+                    <input class="form-control mb-3 mr-sm-4" (keyup)="filtro('nombre')" name="filtro_nombre"
+                      [(ngModel)]="filtro_nombre" type="text" id="inline-form-input-name"
+                      placeholder=" Nombre a Buscar">
+                    <label class="sr-only" for="inline-form-input-username">Correo</label>
+                  </form>
+                </div>
+                <div class="col-6">
+                  <select class="form-control custom-select" name="clientelista" size="5" [(ngModel)]="garantia.cliente"
+                    (ngModelChange)="onChange($event)">
+                    <option value="" selected disabled>Seleccionar</option>
+                    <option value="{{item._id}}" *ngFor="let item of clientes">{{item.nombre}}</option>
+                  </select>
+                </div>
+              </div>
+
+
+
+
+            </div>
+
+            <div class="col-lg-3 col-md-4 form-group">
+              <button class="btn btn-info m-4 btn-block" type="button" data-toggle="modal"
+                [attr.data-target]="'#modal_cliente'" style="padding: 2px;">Crear Cliente</button>
+            </div>
+
+            <div class="col-lg-6 form-group">
+              <label for="">Modelo de Dispositivo</label>
+              <input type="text" class="form-control" placeholder="Modelo de dispositivo" required name="modelo"
+                [(ngModel)]="garantia.modelo">
+            </div>
+            <div class="col-lg-6 form-group">
+              <label for="">Serial de Dispositivo</label>
+              <input type="text" class="form-control" placeholder="Serial de dispositivo" required name="serial"
+                [(ngModel)]="garantia.serial">
+            </div>
+            <div class="col-lg-4 form-group">
+              <label for="">Numero Factura</label>
+              <input type="text" class="form-control" placeholder="Numero Factura" required name="numero_factura"
+                [(ngModel)]="garantia.numero_factura">
+            </div>
+            <div class="col-lg-4 form-group">
+              <label for="">Fecha Factura</label>
+              <input type="date" class="form-control" placeholder="Fecha Factura" required name="fecha_factura"
+                [(ngModel)]="garantia.fecha_factura">
+            </div>
+            <div class="col-lg-4 form-group">
+              <label for="">Oficina</label>
+              <select class="form-control custom-select" id="select-input" name="oficina"
+                [(ngModel)]="garantia.oficina">
+                <option value="" selected disabled>Seleccionar</option>
+                <option value="Bogotá">Bogotá</option>
+                <option value="Cali">Cali</option>
+                <!-- <option value="{{item.titulo}}" *ngFor="let item of config_global.categorias">{{item.titulo}}</option> -->
+              </select>
+            </div>
+            <div class="col-lg-12 form-group">
+              <label for="">Diagnostico del cliente</label>
+              <textarea class="form-control" placeholder="Diagnostico del cliente" required rows="5"
+                name="diagnostico_cliente" [(ngModel)]="garantia.diagnostico_cliente"></textarea>
+            </div>
+            <div class="col-lg-12 form-group">
+              <label for="">Observaciones</label>
+              <textarea class="form-control"
+                placeholder="Registre aqui Observaciones y Accesorios que acompañan al dispositivo" required rows="5"
+                name="observaciones" [(ngModel)]="garantia.observaciones"></textarea>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="row">
+            <div class="col-lg-12 form-group">
+              <label for="">Imagen</label>
+              <div class="custom-file">
+                <input class="custom-file-input" type="file" id="file-input" (change)="fileChangeEvent($event)">
+                <label class="custom-file-label" id="input-portada" for="file-input"
+                  style="white-space:nowrap;overflow: hidden;">Seleccionar imagen</label>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <img [src]="imgSelected" class="img-thumbnail" alt="Rounded image">
+              <!-- <img src="../../../../assets/img/01.jpg" class="img-thumbnail" alt="Rounded image">-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+
+      <button class="btn btn-primary mr-3" type="submit">Crear garantia</button>
+      <a class="btn btn-warning" [routerLink]="['/panel/garantias']">Regresar</a>
+    </div>
+  </div>
+</form>
+
+<div class="modal fade" id="modal_cliente" tabindex="-1" style="display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Creacion de nuevo cliente</h4>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+            aria-hidden="true">x</span></button>
+      </div>
+      <div class="modal-body">
+
+        <form #registroFormCliente="ngForm" (ngSubmit)="crear_cliente(registroFormCliente)">
+          <div class="card box-shadow-sm">
+            <div class="card-body">
+
+              <div class="row">
+                <div class="col-md-4 form-group">
+                  <label for="validationCustom01" class="form-label">Nombre</label>
+                  <input class="form-control" type="text" placeholder="Nombre del cliente" required name="nombre"
+                    [(ngModel)]="cliente.nombre">
+                </div>
+                <div class="col-md-4 form-group">
+                  <label for="validationCustom01" class="form-label">Correo electrónico</label>
+                  <input class="form-control" type="text" placeholder="Correo" required name="email"
+                    [(ngModel)]="cliente.email">
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <label for="validationCustom01" class="form-label">Telefono</label>
+                  <input class="form-control" type="text" placeholder="Telefono" required name="telefono"
+                    [(ngModel)]="cliente.telefono">
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <label for="validationCustom01" class="form-label">Dirección</label>
+                  <input class="form-control" type="text" placeholder="Telefono" required name="direccion"
+                    [(ngModel)]="cliente.direccion">
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <label for="validationCustom01" class="form-label">Nit/Cedula</label>
+                  <input class="form-control" type="text" placeholder="Nit/Cedula" required name="dni"
+                    [(ngModel)]="cliente.dni">
+                </div>
+
+                <div class="col-md-4">
+                  <label for="validationCustom01" class="form-label">Tipo</label>
+                  <select class="form-control custom-select" name="tipo" [(ngModel)]="cliente.tipo" required>
+                    <option value="" disabled selected>Selecionar</option>
+                    <option value="Natural">Natural</option>
+                    <option value="juridica">Juridica</option>
+                  </select>
+                </div>
+              </div>
+
+            </div>
+            <div class="card-footer">
+              <button class="btn btn-primary mr-3" type="submit">Crear cliente</button>
+              <!-- <a [routerLink]="['/panel/clientes']" class="btn btn-warning">Regresar</a> -->
+            </div>
+
+          </div>
+        </form>
+
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-sm" type="submit" data-dismiss="modal">Cancelar</button>
+        <!-- <button *ngIf="!load_btn" class="btn btn-primary btn-shadow btn-sm" type="button" (click)="crear_cliente(1)">Crear</button> -->
+
+      </div>
+    </div>
+  </div>
+</div>

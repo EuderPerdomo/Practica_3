@@ -1,0 +1,204 @@
+<app-sidebar></app-sidebar>
+
+<div class="border-bottom pt-5 mt-2 mb-5">
+
+</div>
+
+<div class="card box-shadow-sm">
+  <div class="card-header">
+
+    <div class="table-responsive" *ngIf="load_data">
+      <!-- <table class="table table-sm table-danger">  -->
+      <table class="table table-sm ">
+        <thead class="thead-success">
+          <th>Modelo</th>
+          <th>Serial</th>
+          <th>Factura</th>
+          <th>Ingresos</th>
+          <th>Estado</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{garantia.modelo}}</td>
+            <td>{{garantia.serial}}</td>
+            <td> {{garantia.numero_factura}} >> {{garantia.fecha_factura | date: 'd/M/yy'}}</td>
+            <td> 5</td>
+            <td *ngIf='garantia.estado == "Por Revisar"'> <span class="badge bg-danger">{{garantia.estado}}</span></td>
+            <td *ngIf='garantia.estado == "En Espera"'> <span class="badge bg-warning">{{garantia.estado}}</span></td>
+            <td *ngIf='garantia.estado == "Reparado"'> <span class="badge bg-success">{{garantia.estado}}</span></td>
+          </tr>
+
+          <tr>
+            <td colspan="5"><span class="badge bg-danger">Falla</span> <small>{{garantia.diagnostico_cliente}}</small>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2"> <strong>Cliente:</strong><small>{{garantia.cliente.nombre}}</small></td>
+            <td colspan="2"> <strong>Direccion:</strong> <small>{{garantia.cliente.direccion}}</small></td>
+            <td><strong>Nit:</strong> <small>{{garantia.cliente.dni}}</small></td>
+          </tr>
+          <tr>
+            <td>
+              <button class="btn btn-info m-4 btn-block" type="button" data-toggle="modal"
+                [attr.data-target]="'#modal_repuesto'" style="padding: 2px;">Asignar Repuesto</button>
+              <button class="btn btn-info m-4 btn-block" type="button" data-toggle="modal"
+                [attr.data-target]="'#modal_repuesto'" style="padding: 2px;">Marcar Como Reparada</button>
+            </td>
+            <td colspan="3">
+              <label for=""><strong>Repuestos Asignados</strong></label>
+              <div class="table-responsive">
+                <table class="table table-sm ">
+                  <thead>
+                    <th>modelo</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>uno</td>
+                      <td>uno</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+
+            </td>
+
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-12 col-lg-7">
+        <form #registroObservacionForm="ngForm"
+          (ngSubmit)="agregar_observacion_garantia_admin(registroObservacionForm)">
+
+          <div class="card box-shadow-sm">
+            <!-- <div class="card-header">
+                    <h5 style="margin-bottom: 0px;">Añadir Observaciones</h5>
+                </div> -->
+            <div class="card-body">
+              <label for="">Añadir Observaciones</label>
+              <div class="col-12 form-group">
+                <tinymce [config]="config" name="observaciones" required [(ngModel)]="observacion.observacion">
+                </tinymce>
+              </div>
+
+              <!-- <div class="col-lg-12 form-group">
+                        <label for="">Observaciones</label>                        
+                        <textarea class="form-control" placeholder="Registre aqui Observaciones" required rows="5" name="observaciones" ></textarea>
+                    </div> -->
+
+            </div>
+          </div>
+
+          <button class="btn btn-primary mr-3" type="submit">Agregar</button>
+          <a class="btn btn-warning" [routerLink]="['/panel/garantias']">Regresar</a>
+        </form>
+
+      </div>
+      <div class="col-md-12 col-lg-5">
+        <div class="table-responsive">
+          <table class="table table-bordered border-primary">
+            <thead class="thead-primary">
+              <tr>
+                <th>Observaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of garantia.observaciones">
+                <td>
+                  <span class="badge bg-info">{{item.fecha | date: 'medium'}}</span>
+
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 " [innerHTML]='item.observacion'
+                    style="font-size: small;">
+                  </div>
+
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-footer">
+
+  </div>
+</div>
+
+
+
+<!-- Inicia Modal -->
+<div class="modal fade" id="modal_repuesto" tabindex="-1" style="display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Asignación de Repuestos</h4>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+            aria-hidden="true">x</span></button>
+      </div>
+      <div class="modal-body">
+
+        <form #asignarRepuestoForm="ngForm" (ngSubmit)="asignarRepuesto(asignarRepuestoForm)">
+          <div class="card box-shadow-sm">
+            <div class="card-body">
+
+              <div class="row">
+                <p> <small>En este apartado solo se mostraran los repuestos disponibles en tus bodegas autorizadas, si
+                    no
+                    encuentra el repuesto deseado pruebe verificando al apartado de repuestos es posible que se
+                    encuentre
+                    en una bodega diferente y pueda solicitar el traslado.
+                  </small></p>
+
+                <div class="col-md-4">
+                  <label for="validationCustom01" class="form-label">Bodega</label>
+                  <select class="form-control custom-select" name="tipo" [(ngModel)]="id_bodega"
+                    (change)="buscar_repuestos()">
+                    <option value="" disabled selected>Selecionar</option>
+                    <option *ngFor="let item of bodegas, index as i" value={{i}}>{{item.nombre[0]}}</option>
+                    <!--value={{item.bodega._id}}-->
+                  </select>
+                </div>
+
+                <div class="col-md-8">
+                  <label for="validationCustom01" class="form-label">Repuesto</label>
+                  <select class="form-control custom-select" name="tipo" required [(ngModel)]="id_repuesto"
+                    (change)="buscar_imagen()">
+                    <option value="0" disabled selected>Selecionar</option>
+                    <option *ngFor="let item of repuestos, index as i" value={{i}}>{{item[0.0].modelo}}
+                      Disponible:{{cantidades_repuesto[i]}}</option> <!--- Disponible: {{cantidades_repuesto[i]}}-->
+                  </select>
+                </div>
+
+                <div class="col-md-12 form-group">
+                  <img style="width: 150px; height: 150px;" [src]="url+'obtener_portada/'+imagen">
+                </div>
+              </div>
+
+            </div>
+            <div class="card-footer">
+              <button class="btn btn-primary mr-3" type="submit">Asignar este repuesto</button>
+              <!-- <a [routerLink]="['/panel/clientes']" class="btn btn-warning">Regresar</a> -->
+            </div>
+
+          </div>
+        </form>
+
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-sm" type="submit" data-dismiss="modal">Cancelar</button>
+        <!-- <button *ngIf="!load_btn" class="btn btn-primary btn-shadow btn-sm" type="button" (click)="crear_cliente(1)">Crear</button> -->
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Finaliza Modal -->

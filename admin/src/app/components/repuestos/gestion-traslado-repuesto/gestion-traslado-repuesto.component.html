@@ -1,0 +1,133 @@
+<app-sidebar></app-sidebar>
+
+<div class="card box-shadow-sm">
+    <div class="card-header">
+        <h5 style="margin-bottom: 0px;">Filtro de Repuestos</h5>
+    </div>
+
+    <div class="card-header">
+        <!-- Button addon on the right -->
+        <div class="row">
+          <div class="col-8">
+            <div class="input-group">
+                <!-- <input class="form-control" type="text" placeholder="Titulo del repuesto" name="filtro" [(ngModel)]="filtro">
+                <button class="btn btn-primary" type="button" (click)="filtrar()" style="margin-right: 3px;">Filtrar</button>
+                <button class="btn btn-info" type="button" (click)="resetear()">Reset Filtro</button> -->
+            </div>
+           </div>
+           <div class="col-12 mt-3">
+             <!-- <button class="btn btn-success" (click)="download_excel()">Exportar a Excel</button> -->
+           </div>
+        </div>
+    </div>
+
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead class="thead-dark">
+                <tr>
+                  <th>Fecha Solicitud</th>
+                  <th>Solicitante</th>
+                  <th>Bodega Origen</th>
+                  <th>Bodega Destino</th>   
+                  <th>Modelo</th>
+                  <th>Cantidad</th>               
+                  <th>Estado</th>
+                  <th>Opciones</th>
+                </tr>
+              </thead>
+
+              <tbody *ngIf="load_data">
+                <tr>
+                  <td class="text-center" colspan="7">
+                    <!-- Custom size border spinner -->
+                  <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  </td>
+                </tr>
+              </tbody>
+              <ng-container *ngIf="!load_data">
+                <tbody *ngFor = "let item of traslados | slice:(page-1)*pageSize : (page-1)*pageSize+pageSize">
+
+                    <tr>
+                        <td>{{item.createdAt |date}}</td>
+                        <td>{{item.solicitante.apellidos}} {{item.solicitante.nombres}}</td>                             
+                        <td>{{item.bodega_origen.nombre}}</td>
+                        <td>{{item.bodega_destino.nombre}}</td> 
+                        <td>{{item.repuesto.modelo}}</td>
+                        <td>{{item.cantidad}}</td> 
+
+                        <td colspan="2" *ngIf="item.estado=='Terminado'">
+                          <button type="button" class="btn btn-success">
+                            {{item.estado}} <span class="badge bg-success">&#10004;</span>
+                          </button>                        
+                        </td>
+                        <ng-container *ngIf="item.estado=='solicitado'">
+                        <td><span class="badge bg-info">{{item.estado}}</span></td>
+                        <td>  <a class="btn btn-light btn-sm" data-toggle="modal" [attr.data-target]="'#estadoModal-'+item._id"  
+                          style="cursor: pointer;">
+                            Confirmar Envio
+                          </a></td>
+                        </ng-container>
+                        <ng-container *ngIf="item.estado=='Transito'">
+                          <td ><span class="badge bg-warning">{{item.estado}}</span></td>
+                          <td>  <a class="btn btn-light btn-sm" data-toggle="modal" [attr.data-target]="'#estadoModal-'+item._id"  
+                            style="cursor: pointer;">
+                              Confirmar Recibido
+                            </a></td>
+                        </ng-container>
+                        <!-- Inicia modal -->
+                        <div class="d-flex justify-content-between">
+                          <div class="modal fade" id="estadoModal-{{item._id}}" tabindex="-1" style="display: none;" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h4 class="modal-title">Confirmar</h4>
+                                  <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">x</span></button>
+                                </div>
+                                <ng-container *ngIf="item.estado=='Transito'">
+                                  <div class="modal-body">
+                                    <p  class="fs-sm">¿Esta seguro de confirmar el recibido de este repuesto?</p>                       
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancelar</button>
+                                   <button  class="btn btn-primary btn-shadow btn-sm" type="button" (click)="cambioEstado(item._id,'Terminado',item.bodega_origen._id,item.bodega_destino._id,item.repuesto._id,item.cantidad)">Si, Confirmar</button>
+                                </div>
+                                </ng-container>
+
+                                <ng-container *ngIf="item.estado=='solicitado'">
+                                  <div class="modal-body">
+                                    <p  class="fs-sm">¿Esta seguro de confirmar el envio de este repuesto?</p>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancelar</button>
+                                    <button  class="btn btn-primary btn-shadow btn-sm" type="button" (click)="cambioEstado(item._id,'Transito',item.bodega_origen._id,item.bodega_destino._id,item.repuesto._id,item.cantidad)">Si, Confirmar</button>
+                                </div>
+                                </ng-container>
+
+                                
+                            </div>
+                          </div>
+                        </div>
+              
+                      </div>
+                        <!-- Fin Modal -->
+
+                        <!-- <td *ngIf="item.estado=='solicitado'"><span class="badge bg-info">{{item.estado}}</span></td>  -->
+                                              
+                      
+                    </tr>
+
+                </tbody>
+
+              </ng-container>
+            </table>
+        </div>
+
+</div>
+<div class="card-footer">
+  <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="traslados.length"></ngb-pagination>
+
+</div>

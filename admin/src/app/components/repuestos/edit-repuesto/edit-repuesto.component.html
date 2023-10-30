@@ -1,0 +1,90 @@
+<app-sidebar></app-sidebar>
+
+<!-- Page title-->
+<div class="border-bottom pt-5 mt-2 mb-5">
+    <h1 class="mt-2 mt-md-4 mb-3 pt-5">Repuestos</h1>
+    <div class="d-flex flex-wrap flex-md-nowrap justify-content-between">
+        <p class="text-muted">Modulo edición de repuestos</p>
+
+    </div>
+</div>
+<ng-container *ngIf='repuesto'>
+    <form #actualizarForm="ngForm" (ngSubmit)="actualizar(actualizarForm)">
+        <div class="card box-shadow-sm">
+            <div class="card-header">
+                <h5 style="margin-bottom: 0px;">Actualización de repuesto</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="row">
+                            <div class="col-lg-12 form-group">
+                                <label for="">Modelo de repuesto</label>
+                                <input type="text" class="form-control" placeholder="Modelo de repuesto" required name="modelo" [(ngModel)]="repuesto.modelo">
+                            </div>
+                            <div class="col-lg-12 form-group">
+                                <label for="">Serial de repuesto</label>
+                                <input type="text" class="form-control" placeholder="Serial de repuesto" required name="serial" [(ngModel)]="repuesto.serial">
+                            </div>
+                            <div class="col-lg-4 form-group">
+                                <label for="">Stock</label>
+                                <input type="number" class="form-control" placeholder="Cantidad inicial" required name="cantidad" [(ngModel)]="repuesto.cantidad">
+                            </div>
+                            <div class="col-lg-4 form-group">
+                                <label for="">Tipo</label>
+                                <input type="number" class="form-control" placeholder="Tipo" required name="tipo" [(ngModel)]="repuesto.tipo">
+                            </div>                  
+                            <div class="col-lg-4 form-group">
+                                <label for="">Bodega</label>
+                                <select class="form-control custom-select" id="select-input"  name="bodega" [(ngModel)]="repuesto.bodega">
+                                    <option value="" selected disabled>Seleccionar</option>
+                                    <option value="" >Bogotá</option>
+                                    <option value="" >Cali</option>
+                                    <option value="{{item.titulo}}" *ngFor="let item of config_global.categorias">{{item.titulo}}</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-12 form-group">
+                                <tinymce [config]="config" name="descripcion" [(ngModel)]="repuesto.descripcion"></tinymce>
+                            </div>
+    
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <div class="col-lg-12 form-group">
+                                <label for="">Portada</label>
+                                <div class="custom-file">
+                                    <input class="custom-file-input" type="file" id="file-input" (change)="fileChangeEvent($event)">
+                                    <label class="custom-file-label" id="input-portada" for="file-input" style="white-space:nowrap;overflow: hidden;">Seleccionar imagen</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <img [src]="imgSelected" class="img-thumbnail" alt="Rounded image">
+                               <!-- <img src="../../../../assets/img/01.jpg" class="img-thumbnail" alt="Rounded image">-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                
+                <button *ngIf="!load_btn" class="btn btn-primary mr-3" type="submit">Actualizar repuesto</button>
+                <button *ngIf="load_btn" type="button" class="btn btn-secondary" disabled>
+                    <span class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>
+                    Actualizando...
+                  </button>
+                <a class="btn btn-warning" [routerLink]="['/panel/repuestos']">Regresar</a>
+            </div>
+        </div>
+    </form>
+</ng-container>
+<ng-container *ngIf='repuesto==undefined'>
+    <div class="card-body">
+        <h3 class="text-center">Registro no encontrado</h3>
+        <div class="row">
+            <div class="col-3 mx-auto">
+                <img src="../../../../assets/img/notfound.png" alt="" style="width: 100%;">
+            </div>
+        </div>
+    </div>
+</ng-container>
