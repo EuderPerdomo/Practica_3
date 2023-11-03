@@ -108,7 +108,6 @@ export class GestionGarantiaComponent implements OnInit {
 
   asignarRepuesto(datos: any) {
 if(datos.valid){
-
   this.repuesto_asignar={
 id_repuesto: this.repuestos[this.id_repuesto][0]._id,
 id_bodega:this.bodegas[this.id_bodega]._id,
@@ -116,11 +115,34 @@ id_garantia:this.id,
   }
 
   this._garantiaService.agregar_repuesto_garantia_admin(this.repuesto_asignar,this.token).subscribe(
-    response=>{},
+    response=>{
+      console.log('respuesta de asignacion',response)
+
+      $('#modal_repuesto').modal('hide')
+      iziToast.show({
+        title: 'Ok',
+        titleColor: 'green',
+        class: 'text-success',
+        position: 'topRight',
+        message: "Repuesto Asignado Correctamente"
+    });
+
+        this.buscar_repuestos()//Listo  de nuevo los repuestos
+
+    },
     error=>{}
   )
 
   console.log('valido',this.repuesto_asignar)
+}
+else{
+  iziToast.show({
+    title: 'Error',
+    titleColor: 'red',
+    class: 'text-danger',
+    position: 'topRight',
+    message: "Debe llenar todos los campos del formulario"
+});
 }
   }
 

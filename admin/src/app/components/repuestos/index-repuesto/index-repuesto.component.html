@@ -41,6 +41,7 @@
                               <th>Modelo</th>
                               <th>Tipo</th>
                               <th>Cantidad</th>
+                              <th>Descripción</th>
                               <th>Opciones</th>
                             </tr>
                           </thead>
@@ -62,7 +63,8 @@
                                   <img style="width: 50px; height: 50px;" [src]="url+'obtener_portada/'+item.repu[0].label" alt="NA">
                                   </td>
                                 <td>{{item.repu[0].tipo}}</td>                             
-                                <td>{{item.suma}}</td>                          
+                                <td>{{item.suma}}</td>  
+                                <td><div [innerHTML]="item.repu[0].descripcion"></div> </td> <!--   {{item.repu[0].descripcion}}  -->                        
                                 <td>
                                   <div class="btn-group dropdown d-inline-block mb-3 mr-2">
                                     <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Opciones</button>
@@ -70,9 +72,6 @@
                                       <a class="dropdown-item" [routerLink]="['/panel/repuestos/traslado',item._id.grupo]" >Trasladar</a>
                                       <a class="dropdown-item" [routerLink]="['/panel/repuestos',item._id.grupo]" >Editar</a>
                                       <a class="dropdown-item" [routerLink]="['/panel/repuestos/inventario',item._id.grupo]" >Inventario</a>
-                                      <a class="dropdown-item" [routerLink]="['/panel/repuestos/variedades',item._id.grupo]" >Variedades</a>
-                                      <a class="dropdown-item" [routerLink]="['/panel/repuestos/galeria',item._id.grupo]" >Galeria</a>
-                                      <a class="dropdown-item" [routerLink]="['/panel/repuestos/reviews',item._id.grupo]" >Reseñas</a>
                                       <a class="dropdown-item" style="cursor: pointer;" data-toggle="modal" [attr.data-target]="'#delete-'+item._id.grupo">Eliminar</a>
                                     </div>
                                   </div>

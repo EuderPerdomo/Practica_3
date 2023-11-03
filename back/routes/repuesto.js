@@ -12,10 +12,13 @@ api.get('/listar_repuestos_admin/:filtro?',[auth.auth],RepuestoController.listar
 api.get('/obtener_repuesto_admin/:id',auth.auth,RepuestoController.obtener_repuesto_admin)
 api.get('/obtener_portada/:img',RepuestoController.obtener_portada)
 api.delete('/eliminar_repuesto_admin/:id',auth.auth,RepuestoController.eliminar_repuesto_admin)
-
+api.put('/actualizar_repuesto_admin/:id',[auth.auth,path],RepuestoController.actualizar_repuesto_admin);
 
 api.get('/obtener_existencia_repuesto_admin/:id',auth.auth,RepuestoController.obtener_existencia_repuesto_admin)
 api.post('/traslado_repuesto_admin',[auth.auth,path],RepuestoController.traslado_repuesto_admin)
+
+//Hacer inventario de los repuestos
+api.get('/inventario_repuesto_admin',auth.auth,RepuestoController.inventario_repuesto_admin)
 
 //Consultar repuestos bodega tecnico
 //api.get ('/consulta_repuesto_bodega_tecnico/:id',auth.auth,RepuestoController.consulta_repuesto_bodega_tecnico) 

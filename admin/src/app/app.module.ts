@@ -29,6 +29,7 @@ import { GestionGarantiaComponent } from './components/garantias/gestion-garanti
 import { UsuarioComponent } from './components/administracion/usuario/usuario.component';
 import { CreateUsuarioComponent } from './components/administracion/usuario/create-usuario/create-usuario.component';
 import { GestionTrasladoRepuestoComponent } from './components/repuestos/gestion-traslado-repuesto/gestion-traslado-repuesto.component';
+import { EditGarantiaComponent } from './components/garantias/edit-garantia/edit-garantia.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { GestionTrasladoRepuestoComponent } from './components/repuestos/gestion
     GestionGarantiaComponent,
     UsuarioComponent,
     CreateUsuarioComponent,
-    GestionTrasladoRepuestoComponent
+    GestionTrasladoRepuestoComponent,
+    EditGarantiaComponent
   ],
   imports: [
     BrowserModule,

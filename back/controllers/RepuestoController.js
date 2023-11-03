@@ -42,6 +42,8 @@ const listar_repuestos_admin = async function (req, res) {
                     }
                 },
 
+
+
             ])
             //Finaliza mi metodo
 
@@ -750,6 +752,87 @@ const traslado_repuesto_admin_2 = async function (req, res) {
     }
 }
 
+
+const inventario_repuesto_admin = async function (req, res) {
+
+    var reg = await Bodega.aggregate([
+        {
+            $unwind: "$repuestos"
+        },
+        {
+            $lookup: {
+                from: 'repuestos',
+                localField: 'repuestos.repuesto',
+                foreignField: '_id',
+                as: 'repu'
+            }
+        },
+        {
+            $project: {
+                bodega: "$nombre",
+                cantidad: "$repuestos.cantidad",
+                repu: 1,
+            }
+        }
+    ])
+
+    console.log('respuesta inventario', reg)
+
+    res.status(200).send({ data: reg })
+
+
+}
+
+
+const actualizar_repuesto_admin=async function (req,res){
+    if(req.user){
+        if(req.user.role=='admin'){
+            let id=req.params['id']
+            let data =req.body
+
+            if(req.files){
+                var img_path =req.files.label.path
+                var name= img_path.split('\\')
+                var portada_name=name[2]
+                
+                let reg=await Repuesto.findByIdAndUpdate({_id:id},{
+                    modelo:data.modelo,
+                serial:data.serial,
+                tipo:data.tipo,
+                descripcion:data.descripcion,
+                cantidad:data.cantidad,
+                bodega:data.bodega,
+                label:portada_name
+                })
+
+                fs.stat('./uploads/productos/'+reg.portada,function(err){
+                    if(!err){
+                        fs.unlink('./uploads/productos/'+reg.portada,(err)=>{
+                            if(err)throw err
+                        })
+                    }
+                })  
+
+                res.status(200).send({data:reg})
+            }else{
+                let reg=await Repuesto.findByIdAndUpdate({_id:id},{
+                    modelo:data.modelo,
+                serial:data.serial,
+                tipo:data.tipo,
+                descripcion:data.descripcion,
+                cantidad:data.cantidad,
+                bodega:data.bodega,
+                })
+                res.status(200).send({data:reg})
+            }
+        }else{
+            res.status(500).send({message:'No Acces'})
+        }
+    }else{
+        res.status(500).send({message:'No Acces'})
+    }
+}
+
 module.exports = {
     registro_repuesto_admin,
     listar_repuestos_admin,
@@ -760,5 +843,7 @@ module.exports = {
     traslado_repuesto_admin,
     consultar_solicitudes_traslados_admin,
     actualizar_estado_traslado_admin,
+    inventario_repuesto_admin,
+    actualizar_repuesto_admin,
     //consulta_repuesto_bodega_tecnico,
 }

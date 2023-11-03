@@ -60,6 +60,52 @@ export class EditRepuestoComponent implements OnInit {
 
   actualizar(actualizarForm:any){
 
+    if(actualizarForm.valid){
+
+      var data : any= {};
+
+      if(this.file != undefined){
+        data.label = this.file;
+      }
+      data.modelo = this.repuesto.modelo;
+      data.serial = this.repuesto.serial;
+      data.tipo = this.repuesto.tipo;
+      data.descripcion = this.repuesto.descripcion;
+      data.cantidad = this.repuesto.cantidad;
+      data.bodega = this.repuesto.bodega;
+    
+
+      this.load_btn = true;
+    
+      this._repuestoService.actualizar_repuesto_admin(data,this.id,this.token).subscribe(
+        response=>{
+          iziToast.show({
+              title: 'SUCCESS',
+              titleColor: '#1DC74C',
+              class: 'text-success',
+              position: 'topRight',
+              message: 'Se actualizó correctamente el  producto.'
+          });
+
+          this.load_btn = false;
+
+          this._router.navigate(['panel/repuestos']);
+        },
+        error=>{
+          this.load_btn = false;
+        }
+      )
+
+    }else{
+      iziToast.show({
+          title: 'ERROR',
+          titleColor: '#FF0000',
+          class: 'text-danger',
+          position: 'topRight',
+          message: 'Los datos del formulario no son validos'
+      });
+      this.load_btn = false;
+    }
   }
 
   fileChangeEvent(event:any){
@@ -116,7 +162,4 @@ export class EditRepuestoComponent implements OnInit {
     }
   console.log(this.file)
   }
-
-
-
 }

@@ -21,6 +21,7 @@ import { GestionGarantiaComponent } from "./components/garantias/gestion-garanti
 import { UsuarioComponent } from "./components/administracion/usuario/usuario.component";
 import { CreateUsuarioComponent } from "./components/administracion/usuario/create-usuario/create-usuario.component";
 import { GestionTrasladoRepuestoComponent } from "./components/repuestos/gestion-traslado-repuesto/gestion-traslado-repuesto.component";
+import { EditGarantiaComponent } from "./components/garantias/edit-garantia/edit-garantia.component";
 
 const appRoute:Routes=[
 {path:'',redirectTo:'inicio',pathMatch:'full'},
@@ -45,10 +46,11 @@ const appRoute:Routes=[
 
     
 
-
+//Garantias
     {path:'garantias',component:IndexGarantiaComponent,canActivate:[AdminGuard]},
     {path:'garantias/registro',component:CreateGarantiaComponent,canActivate:[AdminGuard]},
     {path:'garantias/gestion/:id',component:GestionGarantiaComponent,canActivate:[AdminGuard]},
+    {path:'garantias/:id',component:EditGarantiaComponent,canActivate:[AdminGuard]},
 
     {path:'bodegas',component:IndexBodegaComponent,canActivate:[AdminGuard]},
    {path:'bodegas/registro',component:CreateBodegaComponent,canActivate:[AdminGuard]},

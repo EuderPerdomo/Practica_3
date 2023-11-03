@@ -4,14 +4,13 @@
 <div class="border-bottom pt-5 mt-2 mb-5">
   <h1 class="mt-2 mt-md-4 mb-3 pt-5">Garantias</h1>
   <div class="d-flex flex-wrap flex-md-nowrap justify-content-between">
-    <p class="text-muted">En este modulo se Crean los garantias</p>
-
+    <p class="text-muted">Modulo Edición de Garantías</p>
   </div>
 </div>
-<form #registroForm="ngForm" (ngSubmit)="registro(registroForm)">
+<form #actualizarGarantiaForm="ngForm" (ngSubmit)="actualizar(actualizarGarantiaForm)">
   <div class="card box-shadow-sm">
     <div class="card-header">
-      <h5 style="margin-bottom: 0px;">Registro de garantia</h5>
+      <h5 style="margin-bottom: 0px;">Edición de garantia</h5>
     </div>
     <div class="card-body">
       <div class="row">
@@ -40,10 +39,6 @@
                   </select>
                 </div>
               </div>
-
-
-
-
             </div>
 
             <div class="col-lg-3 col-md-4 form-group">
@@ -69,7 +64,7 @@
             <div class="col-lg-4 form-group">
               <label for="">Fecha Factura</label>
               <input type="date" class="form-control" placeholder="Fecha Factura" required name="fecha_factura"
-                [(ngModel)]="garantia.fecha_factura">
+              [ngModel]='garantia.fecha_factura | date:"yyyy-MM-dd" '>
             </div>
             <div class="col-lg-4 form-group">
               <label for="">Oficina</label>
@@ -92,7 +87,6 @@
                 placeholder="Registre aqui Observaciones y Accesorios que acompañan al dispositivo" required rows="5"
                 name="observaciones" [(ngModel)]="garantia.observaciones_ingreso"></textarea>
             </div>
-
           </div>
         </div>
         <div class="col-lg-4">
@@ -115,7 +109,7 @@
     </div>
     <div class="card-footer">
 
-      <button class="btn btn-primary mr-3" type="submit">Crear garantia</button>
+      <button class="btn btn-primary mr-3" type="submit">Actualizar garantia</button>
       <a class="btn btn-warning" [routerLink]="['/panel/garantias']">Regresar</a>
     </div>
   </div>
@@ -183,8 +177,6 @@
 
           </div>
         </form>
-
-
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary btn-sm" type="submit" data-dismiss="modal">Cancelar</button>

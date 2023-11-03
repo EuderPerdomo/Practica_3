@@ -6,7 +6,6 @@
 
 <div class="card box-shadow-sm">
   <div class="card-header">
-
     <div class="table-responsive" *ngIf="load_data">
       <!-- <table class="table table-sm table-danger">  -->
       <table class="table table-sm ">
@@ -23,7 +22,11 @@
             <td>{{garantia.serial}}</td>
             <td> {{garantia.numero_factura}} >> {{garantia.fecha_factura | date: 'd/M/yy'}}</td>
             <td> 5</td>
-            <td *ngIf='garantia.estado == "Por Revisar"'> <span class="badge bg-danger">{{garantia.estado}}</span></td>
+            <ng-container *ngIf='garantia.estado == "Por Revisar"'>
+              <td> <span class="badge bg-danger">{{garantia.estado}}</span></td>
+            </ng-container>
+
+            
             <td *ngIf='garantia.estado == "En Espera"'> <span class="badge bg-warning">{{garantia.estado}}</span></td>
             <td *ngIf='garantia.estado == "Reparado"'> <span class="badge bg-success">{{garantia.estado}}</span></td>
           </tr>
@@ -39,13 +42,15 @@
           </tr>
           <tr>
             <td>
-              <button class="btn btn-info m-4 btn-block" type="button" data-toggle="modal"
+              <button class="btn btn-info m-1 btn-block" type="button" data-toggle="modal"
                 [attr.data-target]="'#modal_repuesto'" style="padding: 2px;">Asignar Repuesto</button>
-              <button class="btn btn-info m-4 btn-block" type="button" data-toggle="modal"
+
+              <button class="btn btn-info m-1 btn-block" type="button" data-toggle="modal"
                 [attr.data-target]="'#modal_repuesto'" style="padding: 2px;">Marcar Como Reparada</button>
             </td>
             <td colspan="3">
-              <label for=""><strong>Repuestos Asignados</strong></label>
+
+               <label for=""><strong>Repuestos Asignados</strong></label>
               <div class="table-responsive">
                 <table class="table table-sm ">
                   <thead>

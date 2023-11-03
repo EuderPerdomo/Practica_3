@@ -22,7 +22,7 @@ export class GarantiaService {
 
     fd.append('modelo',data.modelo);
     fd.append('serial',data.serial);
-    fd.append('observaciones',data.observaciones);
+    fd.append('observaciones_ingreso',data.observaciones);
     fd.append('diagnostico_cliente',data.diagnostico_cliente);
     fd.append('oficina',data.oficina);
     fd.append('numero_factura',data.numero_factura);
@@ -31,6 +31,30 @@ export class GarantiaService {
     fd.append('label',file);
     console.log(data,'Datos enviados desde el servicio',fd)
     return this._http.post(this.url+'registro_garantia_admin',fd,{headers:headers});
+  }
+
+
+  actualizar_garantia_admin(data: any, id:any, token: any): Observable<any> {
+    console.log('datos de actualizacion',data)
+    console.log('token:',token)
+    if (data.label) {
+      let headers = new HttpHeaders({ 'Authorization': token });
+      const fd = new FormData();
+    fd.append('modelo',data.modelo);
+    fd.append('serial',data.serial);
+    fd.append('observaciones_ingreso',data.observaciones);
+    fd.append('diagnostico_cliente',data.diagnostico_cliente);
+    fd.append('oficina',data.oficina);
+    fd.append('numero_factura',data.numero_factura);
+    fd.append('fecha_factura',data.fecha_factura);
+    fd.append('cliente',data.cliente);
+    fd.append('label',data.label);
+      return this._http.put(this.url + 'actualizar_garantia_admin/'+id,fd, { headers: headers });
+    } else {
+      console.log('metodo dos')
+      let headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': token });
+      return this._http.put(this.url + 'actualizar_garantia_admin/'+id, data, { headers: headers });
+    }
   }
 
 

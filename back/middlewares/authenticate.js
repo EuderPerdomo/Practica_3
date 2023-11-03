@@ -5,7 +5,9 @@ var secret='3ud3774814n'
 
 
 exports.auth=function(req,res,next){
+    
 if(!req.headers.authorization){
+    console.log(req.headers.authorization)
     console.log('No header error')
 return res.status(403).send({message:'No Header error'})
 }
