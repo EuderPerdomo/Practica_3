@@ -27,7 +27,7 @@ const listar_clientes_filtro_admin=async function(req,res){
                 let reg=await Cliente.find()
                 res.status(200).send({data:reg})
             } else{
-                if(tipo=='nombre' ){
+                if(tipo=='nombre' ){                   
                     let reg=await Cliente.find({nombre:new RegExp(filtro,'i')})
                     res.status(200).send({data:reg})
                 }else if(tipo=='correo'){

@@ -22,27 +22,25 @@
                                 <label for="">Modelo de repuesto</label>
                                 <input type="text" class="form-control" placeholder="Modelo de repuesto" required name="modelo" [(ngModel)]="repuesto.modelo">
                             </div>
-                            <div class="col-lg-12 form-group">
-                                <label for="">Serial de repuesto</label>
-                                <input type="text" class="form-control" placeholder="Serial de repuesto" required name="serial" [(ngModel)]="repuesto.serial">
-                            </div>
+
                             <div class="col-lg-4 form-group">
-                                <label for="">Stock</label>
-                                <input type="number" class="form-control" placeholder="Cantidad inicial" required name="cantidad" [(ngModel)]="repuesto.cantidad">
+                                <label for="">Tipo</label>    
+                                <select class="form-control custom-select" id="select-tension" required name="tipo" [(ngModel)]="repuesto.tipo" >
+                                    <option value="" selected disabled> Seleccionar</option>
+                                    <option value="Controlador" selected > Controlador</option>
+                                    <option value="Tarjeta" >Tarjeta</option>
+                                  </select>   
                             </div>
+
                             <div class="col-lg-4 form-group">
-                                <label for="">Tipo</label>
-                                <input type="number" class="form-control" placeholder="Tipo" required name="tipo" [(ngModel)]="repuesto.tipo">
-                            </div>                  
-                            <div class="col-lg-4 form-group">
-                                <label for="">Bodega</label>
-                                <select class="form-control custom-select" id="select-input"  name="bodega" [(ngModel)]="repuesto.bodega">
-                                    <option value="" selected disabled>Seleccionar</option>
-                                    <option value="" >Bogotá</option>
-                                    <option value="" >Cali</option>
-                                    <option value="{{item.titulo}}" *ngFor="let item of config_global.categorias">{{item.titulo}}</option>
-                                </select>
+                                <label for="">Fabricante</label>
+                                <select class="form-control custom-select" id="select-tension" required name="bodega" [(ngModel)]="repuesto.fabricante" >
+                                    <option value="" selected disabled> Seleccionar</option>
+                                    <option value="Sresky" selected > Sresky</option>
+                                    <option value="Anern" >Anern</option>
+                                  </select>
                             </div>
+
                             <div class="col-lg-12 form-group">
                                 <tinymce [config]="config" name="descripcion" [(ngModel)]="repuesto.descripcion"></tinymce>
                             </div>

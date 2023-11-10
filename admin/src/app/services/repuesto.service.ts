@@ -18,14 +18,12 @@ export class RepuestoService {
 
   registro_repuesto_admin(data: any, file: any, token: any): Observable<any> {
     let headers = new HttpHeaders({ 'Authorization': token })
-    console.log('El archivo', file)
     const fd = new FormData()
     // fd.append('_id',data._id)
     fd.append('modelo', data.modelo)
-    fd.append('serial', data.serial)
     fd.append('tipo', data.tipo)
     fd.append('descripcion', data.descripcion)
-    fd.append('cantidad', data.cantidad)
+    fd.append('fabricante', data.fabricante)
     fd.append('bodega', data.bodega)
     fd.append('label', file)
     return this._http.post(this.url + 'registro_repuesto_admin/', fd, { headers: headers })
@@ -39,11 +37,9 @@ export class RepuestoService {
       let headers = new HttpHeaders({ 'Authorization': token });
       const fd = new FormData();
       fd.append('modelo', data.modelo)
-      fd.append('serial', data.serial)
+      fd.append('fabricante', data.fabricante)
       fd.append('tipo', data.tipo)
       fd.append('descripcion', data.descripcion)
-      fd.append('cantidad', data.cantidad)
-      fd.append('bodega', data.bodega)
       fd.append('label', data.label)
       console.log('metodo uno')
       return this._http.put(this.url + 'actualizar_repuesto_admin/'+id,fd, { headers: headers });
@@ -54,15 +50,18 @@ export class RepuestoService {
     }
   }
 
-  listar_repuestos_admin(filtro: any, token: any): Observable<any> {
+  listar_repuestos_admin(tipo:any, filtro: any, token: any): Observable<any> {
     let headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': token });
-    return this._http.get(this.url + 'listar_repuestos_admin/' + filtro, { headers: headers });
+    //return this._http.get(this.url + 'listar_repuestos_admin/' + filtro, { headers: headers });
+    return this._http.get(this.url+'listar_repuestos_admin/'+tipo+'/'+filtro,{headers:headers})
   }
 
   inventario_repuesto_admin(token: any): Observable<any> {
     let headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': token });
     return this._http.get(this.url + 'inventario_repuesto_admin/', { headers: headers });
   }
+
+
 
 
   obtener_repuesto_admin(id: any, token: any): Observable<any> {
@@ -94,6 +93,22 @@ export class RepuestoService {
     return this._http.post(this.url + 'traslado_repuesto_admin/', data, { headers: headers })
   }
 
+/*
+  agregarr_inventario_repuesto_admin(data: any, token: any): Observable<any> {
+    let headers = new HttpHeaders({ 'Authorization': token })
+    const fd = new FormData()
+    fd.append('destino', data.destino)
+    fd.append('repuesto', data.repuesto)
+    fd.append('cantidad', data.cantidad)
+    return this._http.post(this.url + 'agregar_inventario_repuesto_admin/', data, { headers: headers })
+  }
+*/
+  agregar_inventario_repuesto_admin(data: any, id:any, token: any): Observable<any> {
+    console.log('el id que quiero poner',id,data)
+      let headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': token });
+      return this._http.put(this.url + 'agregar_inventario_repuesto_admin/'+id, data, { headers: headers });
+    
+  }
 
   consultar_solicitudes_traslados_admin(filtro: any, token: any): Observable<any> {
     let headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': token });

@@ -1,7 +1,8 @@
 'use strict'
 var express=require('express')
 var AdministracionController=require('../controllers/Administracion')
-
+var multiparty=require('connect-multiparty')
+var path=multiparty({uploadDir:'./uploads/repuestos'})
 var api=express.Router()
 var auth = require('../middlewares/authenticate');
 
@@ -18,5 +19,9 @@ api.get('/listar_usuarios_admin',auth.auth,AdministracionController.listar_usuar
 
 //Roles +++++++++++++++++++++++++++
 api.get('/listar_roles_admin',auth.auth,AdministracionController.listar_roles_admin)
+
+//Dispositivos +++++++++++++++++++++++++++
+api.post('/registro_dispositivo_admin',[auth.auth,path],AdministracionController.registro_dispositivo_admin)
+api.get('/listar_dispositivos_admin/:tipo/:filtro?',[auth.auth],AdministracionController.listar_dispositivos_admin)
 
 module.exports=api

@@ -5,14 +5,58 @@ var fs = require('fs')
 var path = require('path')
 const Bodega = require('../models/Bodega')
 var mongoose = require('mongoose');
-
-const listar_garantias_admin = async function (req, res) {
+/*
+const listar_garantias_admin_1 = async function (req, res) {
     if (req.user) {
         if (req.user.role == 'admin') {
             var filtro = req.params['filtro']
             let reg = await Garantia.find({ modelo: new RegExp(filtro, 'i') }).sort({ createdAt: -1 })
             res.status(200).send({ data: reg })
         } else {
+            res.status(500).send({ message: 'No Acces' })
+        }
+    } else {
+        res.status(500).send({ message: 'No Acces' })
+    }
+}
+*/
+const listar_garantias_admin = async function (req, res) {
+    console.log('listando garantias')
+    if (req.user) {
+        if (req.user.role == 'admin') {
+            let reg = await Garantia.aggregate([
+
+                {
+                    $lookup: {
+                        from: 'dispositivos',
+                        localField: 'modelo',//'repuestos.repuesto'
+                        foreignField: '_id',
+                        as: 'modelos'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'clientes',
+                        localField: 'cliente',
+                        foreignField: '_id',
+                        as: 'clientes'
+                    }
+                },
+                {
+                    $project: {
+                        serial: 1,
+                        diagnostico_cliente: 1,
+                        label: 1,
+                        estado: 1,
+                        modelos: "$modelos.modelo",
+                        clientes: "$clientes.nombre"
+                    }
+                }
+
+            ])
+            res.status(200).send({ data: reg })
+        } else {
+        
             res.status(500).send({ message: 'No Acces' })
         }
     } else {
@@ -111,6 +155,7 @@ const obtener_garantia_admin = async function (req, res) {
             var id = req.params['id']
             try {
                 var reg = await Garantia.findById({ _id: id }).populate('cliente')
+                console.log('garantia individual',reg)
                 res.status(200).send({ data: reg })
             } catch (error) {
                 res.status(200).send({ data: undefined })

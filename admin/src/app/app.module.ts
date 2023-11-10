@@ -30,6 +30,9 @@ import { UsuarioComponent } from './components/administracion/usuario/usuario.co
 import { CreateUsuarioComponent } from './components/administracion/usuario/create-usuario/create-usuario.component';
 import { GestionTrasladoRepuestoComponent } from './components/repuestos/gestion-traslado-repuesto/gestion-traslado-repuesto.component';
 import { EditGarantiaComponent } from './components/garantias/edit-garantia/edit-garantia.component';
+import { CreateDispositivoComponent } from './components/administracion/dispositivo/create-dispositivo/create-dispositivo.component';
+import { IndexDispositivoComponent } from './components/administracion/dispositivo/index-dispositivo/index-dispositivo.component';
+
 
 @NgModule({
   declarations: [
@@ -53,7 +56,9 @@ import { EditGarantiaComponent } from './components/garantias/edit-garantia/edit
     UsuarioComponent,
     CreateUsuarioComponent,
     GestionTrasladoRepuestoComponent,
-    EditGarantiaComponent
+    EditGarantiaComponent,
+    CreateDispositivoComponent,
+    IndexDispositivoComponent,
   ],
   imports: [
     BrowserModule,

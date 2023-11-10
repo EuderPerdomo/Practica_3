@@ -22,6 +22,8 @@ import { UsuarioComponent } from "./components/administracion/usuario/usuario.co
 import { CreateUsuarioComponent } from "./components/administracion/usuario/create-usuario/create-usuario.component";
 import { GestionTrasladoRepuestoComponent } from "./components/repuestos/gestion-traslado-repuesto/gestion-traslado-repuesto.component";
 import { EditGarantiaComponent } from "./components/garantias/edit-garantia/edit-garantia.component";
+import { CreateDispositivoComponent } from "./components/administracion/dispositivo/create-dispositivo/create-dispositivo.component";
+import { IndexDispositivoComponent } from "./components/administracion/dispositivo/index-dispositivo/index-dispositivo.component";
 
 const appRoute:Routes=[
 {path:'',redirectTo:'inicio',pathMatch:'full'},
@@ -41,7 +43,7 @@ const appRoute:Routes=[
     {path:'repuestos/registro',component:CreateRepuestoComponent,canActivate:[AdminGuard]},
     {path:'repuestos/:id',component:EditRepuestoComponent,canActivate:[AdminGuard]},
 
-    //Traslados
+    //Traslados, Agregar Inventario
     {path:'repuestos/traslado/:id',component:TrasladoRepuestoComponent,canActivate:[AdminGuard]},
 
     
@@ -52,9 +54,14 @@ const appRoute:Routes=[
     {path:'garantias/gestion/:id',component:GestionGarantiaComponent,canActivate:[AdminGuard]},
     {path:'garantias/:id',component:EditGarantiaComponent,canActivate:[AdminGuard]},
 
+//Administración
     {path:'bodegas',component:IndexBodegaComponent,canActivate:[AdminGuard]},
    {path:'bodegas/registro',component:CreateBodegaComponent,canActivate:[AdminGuard]},
    {path:'bodegas/:id',component:EditBodegaComponent,canActivate:[AdminGuard]},
+
+   //Administración
+   {path:'dispositivos',component:IndexDispositivoComponent,canActivate:[AdminGuard]},
+   {path:'dispositivos/registro',component:CreateDispositivoComponent,canActivate:[AdminGuard]},
 
    //Usuarios
    {path:'usuarios',component:UsuarioComponent,canActivate:[AdminGuard]},

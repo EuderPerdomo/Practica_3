@@ -17,21 +17,45 @@
                     <h5 style="margin-bottom: 0px;">Filtro de Repuestos</h5>
                 </div>
 
-                <div class="card-header">
-                    <!-- Button addon on the right -->
-                    <div class="row">
-                      <div class="col-8">
-                        <div class="input-group">
-                            <input class="form-control" type="text" placeholder="Titulo del repuesto" name="filtro" [(ngModel)]="filtro">
-                            <button class="btn btn-primary" type="button" (click)="filtrar()" style="margin-right: 3px;">Filtrar</button>
-                            <button class="btn btn-info" type="button" (click)="resetear()">Reset Filtro</button>
-                        </div>
-                       </div>
-                       <div class="col-12 mt-3">
-                         <button class="btn btn-success" (click)="download_excel()">Exportar a Excel</button>
-                       </div>
+              <!-- <div class="card-header">
+                <form class="form-inline pt-2">
+                    <label class="sr-only" for="inline-form-input-name">Modelo</label>
+                    <input class="form-control mb-3 mr-sm-4" (keyup)="filtros('modelo')" name="filtro_modelo" [(ngModel)]="filtro_modelo" type="text" id="inline-form-input-name" placeholder="Modelo">
+                    
+                     <label class="sr-only" for="inline-form-input-username">Correo</label>
+                    <div class="input-group mb-3 mr-sm-4">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">@</div>
                     </div>
-                </div>
+                    <input class="form-control" (keyup)="filtros('correo')" name="filtro_correo" [(ngModel)]="filtro_correo" type="text" id="inline-form-input-username" placeholder="Correo">
+                    </div>
+
+                </form>
+            </div> -->
+
+            <!-- <div class="card-header">
+              <div class="row">
+                <div class="col-8">
+                  <div class="input-group">
+                      <input class="form-control" type="text" placeholder="Titulo del repuesto" name="filtro" [(ngModel)]="filtro">
+                      <button class="btn btn-primary" type="button" (click)="filtrar()" style="margin-right: 3px;">Filtrar</button>
+                      <button class="btn btn-info" type="button" (click)="resetear()">Reset Filtro</button>
+                  </div>
+                 </div>
+                 <div class="col-12 mt-3">
+                   <button class="btn btn-success" (click)="download_excel()">Exportar a Excel</button>
+                 </div>
+              </div>
+          </div> -->
+
+          <div class="card-header">
+            <form class="form-inline pt-2">
+                <label class="sr-only" for="inline-form-input-name">Nombre</label>
+                <input class="form-control mb-3 mr-sm-4" (keyup)="filtros('modelo')" name="filtro_nombre" [(ngModel)]="filtro_modelo" type="text" id="inline-form-input-name" placeholder="Modelo">
+                
+            </form>
+        </div>
+
 
                 <div class="card-body">
                     <div class="table-responsive">
@@ -45,16 +69,17 @@
                               <th>Opciones</th>
                             </tr>
                           </thead>
+
                           <tbody *ngIf="load_data">
                             <tr>
-                              <td class="text-center" colspan="7">
-                                <!-- Custom size border spinner -->
+                              <td class="text-center" colspan="7">                              
                               <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
                                 <span class="visually-hidden">Loading...</span>
                               </div>
                               </td>
                             </tr>
-                          </tbody>
+                          </tbody> 
+
                           <ng-container *ngIf="!load_data">
                             <tbody *ngFor = "let item of repuestos | slice:(page-1)*pageSize : (page-1)*pageSize+pageSize">
                               <tr>
@@ -64,14 +89,14 @@
                                   </td>
                                 <td>{{item.repu[0].tipo}}</td>                             
                                 <td>{{item.suma}}</td>  
-                                <td><div [innerHTML]="item.repu[0].descripcion"></div> </td> <!--   {{item.repu[0].descripcion}}  -->                        
+                                <td><div [innerHTML]="item.repu[0].descripcion"></div></td> <!-- {{item.repu[0].descripcion}}     -->                        
                                 <td>
                                   <div class="btn-group dropdown d-inline-block mb-3 mr-2">
                                     <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Opciones</button>
                                     <div class="dropdown-menu">
-                                      <a class="dropdown-item" [routerLink]="['/panel/repuestos/traslado',item._id.grupo]" >Trasladar</a>
+                                      <a class="dropdown-item" [routerLink]="['/panel/repuestos/traslado',item._id.grupo]" >Inventarios/Traslados</a>
                                       <a class="dropdown-item" [routerLink]="['/panel/repuestos',item._id.grupo]" >Editar</a>
-                                      <a class="dropdown-item" [routerLink]="['/panel/repuestos/inventario',item._id.grupo]" >Inventario</a>
+                                    
                                       <a class="dropdown-item" style="cursor: pointer;" data-toggle="modal" [attr.data-target]="'#delete-'+item._id.grupo">Eliminar</a>
                                     </div>
                                   </div>

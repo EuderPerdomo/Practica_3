@@ -13,6 +13,7 @@
     <div class="card-header">
       <h5 style="margin-bottom: 0px;">Registro de garantia</h5>
     </div>
+
     <div class="card-body">
       <div class="row">
         <div class="col-lg-8">
@@ -40,10 +41,6 @@
                   </select>
                 </div>
               </div>
-
-
-
-
             </div>
 
             <div class="col-lg-3 col-md-4 form-group">
@@ -56,6 +53,37 @@
               <input type="text" class="form-control" placeholder="Modelo de dispositivo" required name="modelo"
                 [(ngModel)]="garantia.modelo">
             </div>
+
+            <!-- Inicia Modelos Nuevo -->
+            <div class="col-lg-9 form-group">
+              <label for="">Modelo</label>
+              <input type="text" class="form-control" placeholder="Ningun Modelo Seleccionado" required name="modelo"
+                [(ngModel)]="modelo.modelo" value="id_modelo" disabled>
+              <div class="row">
+                <div class="col-6">
+                  <label for="">Buscar Modelos</label>
+                  <form class="form-inline pt-2">
+                    <label class="sr-only" for="inline-form-input-name">Nombre</label>
+                    <input class="form-control mb-3 mr-sm-4" (keyup)="filtro_modelo('equipo')" name="filtro_modelo"
+                      [(ngModel)]="filtro_modelos" type="text" id="inline-form-input-name"
+                      placeholder=" Modelo a Buscar">
+                  </form>
+                </div>
+                <div class="col-6">
+                  <select class="form-control custom-select" name="clientelista" size="5" [(ngModel)]="garantia.modelo"
+                    (ngModelChange)="onChange_modelo($event)">
+                    <option value="" selected disabled>Seleccionar</option>
+                    <option value="{{item._id}}" *ngFor="let item of modelos">{{item.modelo}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <!-- Finaliza modelos Nuevo -->
+
+
+
+
+
             <div class="col-lg-6 form-group">
               <label for="">Serial de Dispositivo</label>
               <input type="text" class="form-control" placeholder="Serial de dispositivo" required name="serial"

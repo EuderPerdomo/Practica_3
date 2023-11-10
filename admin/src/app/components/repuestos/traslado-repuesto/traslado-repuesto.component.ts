@@ -34,7 +34,8 @@ public page=1
 public pageSize=10
 public load_btn=false
 
-
+public cantidad_agregar:any
+public bodega_agregar:any
 
 //Editar
 
@@ -193,5 +194,46 @@ if(registroFormTraslado.valid){
         return false;
     } 
 }
+
+
+
+//Agregar Inventario
+agregar_inventario(){
+  const data={
+  destino:this.bodega_agregar,//Id destino
+  repuesto:this.id,//Id de repuesto
+  cantidad:this.cantidad_agregar,//Cantidad a trasladar
+  }
+  
+  this._repuestoService.agregar_inventario_repuesto_admin(data,this.id,this.token).subscribe(
+    response=>{
+      console.log(response)
+      iziToast.show({
+        title:'SUCCESS',
+        titleColor:'#00CF61',
+        class:'text-susscess',
+        position:'topRight',
+        message:response.message
+      })
+      this.bodega_agregar=''
+      this.cantidad_agregar=0
+      this.init_data()
+    },
+  
+    error=>{
+      console.log(error)
+      iziToast.show({
+        title: 'Error',
+        titleColor: 'red',
+        class: 'text-danger',
+        position: 'topRight',
+        message: 'Error al Ingresar Inventario'
+      })
+    }
+  )
+  
+  //this._repuestoService.traslado_repuesto_admin()
+    }
+  
 
 }

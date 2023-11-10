@@ -56,4 +56,25 @@ registro_usuario_admin(data:any,token:any):Observable<any>{
     let headers=new HttpHeaders({'Content-Type':'application/json','Authorization':token})
     return this._http.get(this.url+'listar_roles_admin/',{headers:headers})
    }
+
+//Dispositivos +++++++++++++++++++++++++++++++++++++++
+registro_dispositivo_admin(data:any,file:any,token:any):Observable<any>{
+  let headers = new HttpHeaders({'Authorization':token});
+  const fd = new FormData();
+  fd.append('modelo',data.modelo);
+  fd.append('tipo',data.tipo);
+  fd.append('fabricante',data.fabricante);
+  fd.append('descripcion',data.descripcion);
+  fd.append('label',file);
+  console.log(data,'Datos enviados desde el servicio',fd,data,file)
+  return this._http.post(this.url+'registro_dispositivo_admin/',fd,{headers:headers});
+}
+
+
+listar_dispositivos_admin(tipo:any, filtro: any, token: any): Observable<any> {
+  let headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': token });
+  return this._http.get(this.url+'listar_dispositivos_admin/'+tipo+'/'+filtro,{headers:headers})
+}
+
+
 }

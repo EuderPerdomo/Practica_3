@@ -68,13 +68,9 @@ export class EditRepuestoComponent implements OnInit {
         data.label = this.file;
       }
       data.modelo = this.repuesto.modelo;
-      data.serial = this.repuesto.serial;
+      data.fabricante = this.repuesto.fabricante;
       data.tipo = this.repuesto.tipo;
       data.descripcion = this.repuesto.descripcion;
-      data.cantidad = this.repuesto.cantidad;
-      data.bodega = this.repuesto.bodega;
-    
-
       this.load_btn = true;
     
       this._repuestoService.actualizar_repuesto_admin(data,this.id,this.token).subscribe(

@@ -11,92 +11,85 @@ var mongoose = require('mongoose');
 const listar_repuestos_admin = async function (req, res) {
     if (req.user) {
         if (req.user.role == 'admin') {
+            let tipo = req.params['tipo']
             var filtro = req.params['filtro']
-            //let reg =await Repuesto.find({modelo: new RegExp(filtro,'i')})
+            if (tipo == null || tipo == "null") {
 
-            //Inicia mi metodo
+                let reg = await Bodega.aggregate([
+                    {
+                        $unwind: "$repuestos"
+                    },
 
-            let reg = await Bodega.aggregate([
-                {
-                    $unwind: "$repuestos"
-                },
-
-                { //Agrupas los elementos por repuestos.repuesto y sumamos la cantidad
-                    $group: {
-                        _id: {
-                            grupo: "$repuestos.repuesto",
-                        },
-                        suma: {
-                            $sum: "$repuestos.cantidad"
+                    { //Agrupas los elementos por repuestos.repuesto y sumamos la cantidad
+                        $group: {
+                            _id: {
+                                grupo: "$repuestos.repuesto",
+                            },
+                            suma: {
+                                $sum: "$repuestos.cantidad"
+                            }
                         }
-                    }
-                },
+                    },
 
-                //Lookup a la informacion del repuesto
-                {
-                    $lookup: {
-                        from: 'repuestos',
-                        localField: '_id.grupo',//'repuestos.repuesto'
-                        foreignField: '_id',
-                        as: 'repu'
-                    }
-                },
+                    //Lookup a la informacion del repuesto
+                    {
+                        $lookup: {
+                            from: 'repuestos',
+                            localField: '_id.grupo',//'repuestos.repuesto'
+                            foreignField: '_id',
+                            as: 'repu'
+                        }
+                    },
+                ])
 
+                res.status(200).send({ data: reg })
+            } else {
+                if (tipo == 'modelo') {
+                    //let reg=await Cliente.find({nombre:new RegExp(filtro,'i')})
 
+                    //Inicia mi metodo
 
-            ])
-            //Finaliza mi metodo
+                    let reg = await Bodega.aggregate([
+                        {
+                            $unwind: "$repuestos"
+                        },
 
-            console.log('respuesta consulta', reg)
+                        { //Agrupas los elementos por repuestos.repuesto y sumamos la cantidad
+                            $group: {
+                                _id: {
+                                    grupo: "$repuestos.repuesto",
+                                },
+                                suma: {
+                                    $sum: "$repuestos.cantidad"
+                                }
+                            }
+                        },
 
-            res.status(200).send({ data: reg })
-        } else {
-            res.status(500).send({ message: 'No Acces' })
-        }
-    } else {
-        res.status(500).send({ message: 'No Acces' })
-    }
-}
+                        //Lookup a la informacion del repuesto
+                        {
+                            $lookup: {
+                                from: 'repuestos',
+                                localField: '_id.grupo',//'repuestos.repuesto'
+                                foreignField: '_id',
+                                as: 'repu'
+                            }
+                        }, { $match: { 'repu.modelo': { '$regex': new RegExp(filtro, 'i') } } }
+                    ])
+                    //Finaliza mi metodo
 
+                    res.status(200).send({ data: reg })
+                } else if (tipo == 'correo') {
+                    res.status(500).send({ message: 'No se especifico un filtro' })
 
-/*
-Version Inicial
-const listar_repuestos_admin = async function (req, res) {
-    if (req.user) {
-        if (req.user.role == 'admin') {
-            var filtro = req.params['filtro']
-            //let reg =await Repuesto.find({modelo: new RegExp(filtro,'i')})
-
-            //Inicia mi metodo
-
-            let reg = await Repuesto.aggregate([
-                //Primer paso
-                {
-                    $lookup: {
-                        from: "bodega_repuestos",
-                        localField: "_id",    // field in the orders collection
-                        foreignField: "repuesto",  // field in the items collection
-                        as: "resultado"
-                    }
-
-                },
-                //Segundo paso
-                {
-                    $project: {
-                        modelo: 1,
-                        serial: 1,
-                        tipo: 1,
-                        descripcion: 1,
-                        label: 1,
-                        _id: 1,
-                        cantidad: { $sum: "$resultado.cantidad" }
-                    }
                 }
-            ])
-            //Finaliza mi mrtodo
+            }
 
 
-            res.status(200).send({ data: reg })
+
+
+            ///console.log('respuesta consulta', reg)
+
+            ///res.status(200).send({ data: reg })
         } else {
             res.status(500).send({ message: 'No Acces' })
         }
@@ -104,9 +97,6 @@ const listar_repuestos_admin = async function (req, res) {
         res.status(500).send({ message: 'No Acces' })
     }
 }
-
-*/
-
 
 
 //Registrar repuestos directamente en las bodegas
@@ -123,8 +113,8 @@ const registro_repuesto_admin = async function (req, res) {
             //Primero Creamos el repuesto
             let reg = await Repuesto.create(data)
 
-            //Ahora lo vinculo a la bodega
 
+            //Ahora lo vinculo a la bodega
             var rep_garantia = await Bodega.findByIdAndUpdate({ _id: data.bodega }, {
                 $push: {
                     repuestos: {
@@ -134,24 +124,6 @@ const registro_repuesto_admin = async function (req, res) {
                 }
             }, { useFindAndModify: false });
 
-            /*
-                        var rep_garantia =await Bodega.findByIdAndUpdate({_id:data.bodega},{ $push: {repuestos:{
-                            modelo:"modelo",
-                            serial:"serial",
-                        }}},{useFindAndModify: false});
-            */
-
-            /*
-                        let reg = await Repuesto.create(data)
-                        //Añadir Bodega-Repuesto
-                        datos = {
-                            bodega: data.bodega,
-                            repuesto: reg._id,
-                            cantidad: data.cantidad,
-                        }
-                        var bod = await Bodega_Repuesto.create(datos)
-            
-                        */
             res.status(200).send({ data: rep_garantia })
 
         } else {
@@ -162,39 +134,6 @@ const registro_repuesto_admin = async function (req, res) {
     }
 }
 
-/**
-Forma Original registrar repuestos en Repuestos
-
-const registro_repuesto_admin = async function (req, res) {
-    if (req.user) {
-        if (req.user.role == 'admin') {
-            let data = req.body
-            console.log('A registrat',data)
-            var img_path = req.files.label.path
-            var name = img_path.split('\\')
-            var portada_name = name[2]
-            data.label = portada_name
-            
-            let reg = await Repuesto.create(data)
-            //Añadir Bodega-Repuesto
-            datos = {
-                bodega: data.bodega,
-                repuesto: reg._id,
-                cantidad: data.cantidad,
-            }
-            var bod = await Bodega_Repuesto.create(datos)
-
-
-            res.status(200).send({ data: reg })
-
-        } else {
-            res.status(500).send({ message: 'NoAccess' });
-        }
-    } else {
-        res.status(500).send({ message: 'NoAccess' });
-    }
-}
- */
 const obtener_portada = async function (req, res) {
     var img = req.params['img']
     fs.stat('./uploads/repuestos/' + img, function (err) {
@@ -784,52 +723,151 @@ const inventario_repuesto_admin = async function (req, res) {
 }
 
 
-const actualizar_repuesto_admin=async function (req,res){
-    if(req.user){
-        if(req.user.role=='admin'){
-            let id=req.params['id']
-            let data =req.body
+const actualizar_repuesto_admin = async function (req, res) {
+    if (req.user) {
+        if (req.user.role == 'admin') {
+            let id = req.params['id']
+            let data = req.body
 
-            if(req.files){
-                var img_path =req.files.label.path
-                var name= img_path.split('\\')
-                var portada_name=name[2]
-                
-                let reg=await Repuesto.findByIdAndUpdate({_id:id},{
-                    modelo:data.modelo,
-                serial:data.serial,
-                tipo:data.tipo,
-                descripcion:data.descripcion,
-                cantidad:data.cantidad,
-                bodega:data.bodega,
-                label:portada_name
+            if (req.files) {
+                var img_path = req.files.label.path
+                var name = img_path.split('\\')
+                var portada_name = name[2]
+
+                let reg = await Repuesto.findByIdAndUpdate({ _id: id }, {
+                    modelo: data.modelo,
+                    serial: data.serial,
+                    tipo: data.tipo,
+                    descripcion: data.descripcion,
+                    cantidad: data.cantidad,
+                    bodega: data.bodega,
+                    label: portada_name
                 })
 
-                fs.stat('./uploads/productos/'+reg.portada,function(err){
-                    if(!err){
-                        fs.unlink('./uploads/productos/'+reg.portada,(err)=>{
-                            if(err)throw err
+                fs.stat('./uploads/productos/' + reg.portada, function (err) {
+                    if (!err) {
+                        fs.unlink('./uploads/productos/' + reg.portada, (err) => {
+                            if (err) throw err
                         })
                     }
-                })  
-
-                res.status(200).send({data:reg})
-            }else{
-                let reg=await Repuesto.findByIdAndUpdate({_id:id},{
-                    modelo:data.modelo,
-                serial:data.serial,
-                tipo:data.tipo,
-                descripcion:data.descripcion,
-                cantidad:data.cantidad,
-                bodega:data.bodega,
                 })
-                res.status(200).send({data:reg})
+
+                res.status(200).send({ data: reg })
+            } else {
+                let reg = await Repuesto.findByIdAndUpdate({ _id: id }, {
+                    modelo: data.modelo,
+                    serial: data.serial,
+                    tipo: data.tipo,
+                    descripcion: data.descripcion,
+                    cantidad: data.cantidad,
+                    bodega: data.bodega,
+                })
+                res.status(200).send({ data: reg })
             }
-        }else{
-            res.status(500).send({message:'No Acces'})
+        } else {
+            res.status(500).send({ message: 'No Acces' })
         }
-    }else{
-        res.status(500).send({message:'No Acces'})
+    } else {
+        res.status(500).send({ message: 'No Acces' })
+    }
+}
+
+
+const agregar_inventario_repuesto_admin = async function (req, res) {
+console.log('Agregar inventario repuesto')
+    if (req.user) {
+        if (req.user.role == 'admin') {
+            console.log('req parma', req.params)
+            let id = req.params['id']
+            let data = req.body
+            //TO DO
+            //1. si repuesto y bodega ya existen, incrementar el valor
+            //2. Si no existen crearlo
+console.log('datos buscados',data,id)
+
+            /*Iniciamos */
+
+            console.log(data, 'actualizar las bodegas')
+
+            var destino_repuesto = await Bodega.aggregate([
+                {
+                    $unwind: "$repuestos"
+                },
+                {
+                    $addFields: {
+                        id_repuesto: { $toString: "$repuestos.repuesto" },
+                        id_bodega: { $toString: "$_id" }
+                    }
+                },
+
+                {
+                    $match: { $and: [{ id_repuesto: data.repuesto }, { id_bodega: data.destino }] }
+                },
+
+            ])
+            console.log('destinos repuestos', destino_repuesto, destino_repuesto.length)
+            //Consultar Origen
+            //var origen_repuesto = await Bodega_Repuesto.find({ repuesto: data.repuesto, bodega: data.origen })
+
+            //Cuando ya existe en el destino
+            if (destino_repuesto.length >= 1) {//ya existe en el destino
+                console.log('Existe')
+
+                try {
+                    id = destino_repuesto[0]._id
+                    console.log('id de la bodega en el destino', id)
+                    id_destino = new mongoose.Types.ObjectId(id)
+                    console.log('id_destino', id_destino)
+
+                    //Paso 1, descuento el repuesto
+                    var existe = await Bodega.updateOne(
+                        { "_id": id_destino, "repuestos.repuesto": data.repuesto },
+                        { $inc: { "repuestos.$.cantidad": data.cantidad } }
+                    )
+                    console.log('destino actualizado', existe, id_destino, data.repuesto, data.cantidad)
+
+                    res.status(200).send({ message: 'Nuevo inventario ingresado Correctamente' })
+                } catch (error) {
+                    console.log('errorrr')
+                }
+
+            } else {
+                //Cuando no existe en el distino
+                console.log('No existe el destino')
+                //Crear nuevo registro
+                datos = {
+                    bodega: data.destino,
+                    repuesto: data.repuesto,
+                    cantidad: data.cantidad,
+                }
+                // var reg = await Bodega_Repuesto.create(datos)
+                //Ahora lo vinculo a la bodega
+
+                var reg_2 = await Bodega.findByIdAndUpdate({ _id: data.destino }, {
+                    $push: {
+                        repuestos: {
+                            repuesto: data.repuesto,
+                            cantidad: data.cantidad,
+                        }
+                    }
+                }, { useFindAndModify: false });
+
+
+                console.log('no existe en el destino, actualizado', reg_2)
+                res.status(200).send({ message: 'Traslado Correcto' })
+            }
+
+
+
+            //Finaliza
+            /*Finalizamos */
+
+
+        } else {
+            res.status(500).send({ message: 'No Acces' })
+        }
+    } else {
+        res.status(500).send({ message: 'No Acces' })
     }
 }
 
@@ -845,5 +883,6 @@ module.exports = {
     actualizar_estado_traslado_admin,
     inventario_repuesto_admin,
     actualizar_repuesto_admin,
+    agregar_inventario_repuesto_admin,
     //consulta_repuesto_bodega_tecnico,
 }

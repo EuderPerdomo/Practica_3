@@ -44,13 +44,13 @@ public load_btn=false
 
     this._garantiaService.listar_garantias_admin(this.filtro,this.token).subscribe(
       response=>{
-        console.log(response)
+        console.log('Garantias consultadas',response)
         this.garantias=response.data
         this.load_data=false
         this.url=GLOBAL.url
       },
       error=>{
-        console.log('Error al lstar garantias',error)
+        console.log('Error al listar garantias',error)
       }
     )
 

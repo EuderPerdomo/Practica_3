@@ -1,11 +1,46 @@
 <app-sidebar></app-sidebar>
 <!-- Page title-->
-<h1>xsfsdf</h1>
-<div class="border-bottom pt-5 mt-2 mb-5" *ngIf="!load_data">
-  <h1 class="mt-2 mt-md-4 mb-3 pt-5">{{repuestos[0].detalles[0].modelo}}</h1>
-</div>
+<ng-container *ngIf="!load_data">
+  <div class="border-bottom pt-5 mt-2 mb-5">
+    <h1 class="mt-2 mt-md-4 mb-3 pt-5">{{repuestos[0].detalles[0].modelo}}</h1>
+  </div>
+</ng-container>
+
 
 <div class="card box-shadow-sm">
+
+  <div class="card-header">
+    <h5 style="margin-bottom: 0px;">Agregar Inventario</h5>
+  </div>
+
+  <div class="card-header">
+    <div class="form-group row align-items-center">
+      <label class="col-md-3 col-form-label font-weight-medium" for="cantidad">Cantidad</label>
+      <div class="col-md-5">
+        <input class="form-control" required type="number" id="cantidad" placeholder="Cantidad a Ingresar"
+          name="titulo_variedad" 
+          [(ngModel)]="cantidad_agregar"
+          min="1" onkeypress="return event.charCode >=48" 
+          > <!--charcode 48 solo permite numeros-->
+      </div>
+    </div>
+
+    <div class="form-group row align-items-center">
+      <label class="col-md-3 col-form-label font-weight-medium" for="bodega">Bodega Destino</label>
+      <div class="col-md-5">
+        <select class="form-control custom-select" id="select-tension" required name="destino" [(ngModel)]="bodega_agregar">
+          <option value="0" selected disabled> Seleccionar</option>
+          <option value="{{bod._id}}" *ngFor="let bod of bodegas">{{bod.nombre}}</option>
+        </select>
+      </div>
+    </div>
+
+
+    <button type="submit" class="btn btn-success " (click)="agregar_inventario()">Agregar Inventario</button>
+
+  </div>
+
+
   <div class="card-body">
     <div class="table-responsive">
       <table class="table table-bordered">
